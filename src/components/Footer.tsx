@@ -1,5 +1,5 @@
 
-import { Heart } from "lucide-react";
+import { Heart, Phone, Mail, Linkedin } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,9 +12,27 @@ export function Footer() {
             © {currentYear} Ian Ochieng' Otieno. All rights reserved.
           </p>
           
-          <p className="flex items-center gap-1 text-muted-foreground">
-            Built with <Heart className="h-4 w-4 text-red-500 animate-pulse" /> by Ian Ochieng' Otieno
-          </p>
+          <div className="flex flex-col items-center md:items-end space-y-2">
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">+254 759 986 632</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-muted-foreground" />
+              <a href="mailto:ianochieng277@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                ianochieng277@gmail.com
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <Linkedin className="h-4 w-4 text-muted-foreground" />
+              <a href="https://www.linkedin.com/in/ian-ochieng-26152b222/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                LinkedIn Profile
+              </a>
+            </div>
+            <p className="flex items-center gap-1 text-muted-foreground mt-4">
+              Built with <Heart className="h-4 w-4 text-red-500 animate-pulse" /> by Ian Ochieng' Otieno
+            </p>
+          </div>
         </div>
       </div>
     </footer>

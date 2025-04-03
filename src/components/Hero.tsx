@@ -29,6 +29,11 @@ export function Hero() {
     };
   }, []);
 
+  const handleDownloadCV = () => {
+    // In a real implementation, this would download the actual CV file
+    alert("CV download functionality will be implemented soon!");
+  };
+
   return (
     <section id="home" className="min-h-screen flex flex-col justify-center pb-10 pt-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent -z-10" />
@@ -56,28 +61,30 @@ export function Hero() {
           </div>
           
           <p className="text-lg text-muted-foreground max-w-xl">
-            I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. I specialize in crafting secure, scalable solutions to complex problems with a focus on cloud and network security.
+            Information Security Specialist with proven experience in designing, implementing, and managing comprehensive security solutions to protect organizational IT infrastructure. I specialize in cloud security, network monitoring, and vulnerability management with expertise in AWS and Azure environments.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <Button className="gap-2 group" size="lg">
-              <Mail className="w-4 h-4 group-hover:animate-bounce" />
-              Contact Me
+            <Button className="gap-2 group" size="lg" asChild>
+              <a href="#contact">
+                <Mail className="w-4 h-4 group-hover:animate-bounce" />
+                Contact Me
+              </a>
             </Button>
-            <Button variant="outline" className="gap-2" size="lg">
+            <Button variant="outline" className="gap-2" size="lg" onClick={handleDownloadCV}>
               <Download className="w-4 h-4" />
               Download CV
             </Button>
           </div>
           
           <div className="flex gap-6 mt-6">
-            <a href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="text-foreground/70 hover:text-primary transition-colors">
               <Github className="w-6 h-6" />
             </a>
-            <a href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <a href="https://www.linkedin.com/in/ian-ochieng-26152b222/" target="_blank" rel="noopener noreferrer" className="text-foreground/70 hover:text-primary transition-colors">
               <Linkedin className="w-6 h-6" />
             </a>
-            <a href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <a href="mailto:ianochieng277@gmail.com" className="text-foreground/70 hover:text-primary transition-colors">
               <Mail className="w-6 h-6" />
             </a>
           </div>

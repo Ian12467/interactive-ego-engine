@@ -13,18 +13,24 @@ export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   
   const skills: Skill[] = [
-    { name: "HTML", level: 95, category: "frontend" },
-    { name: "CSS", level: 90, category: "frontend" },
+    // Security Skills
+    { name: "Network Security", level: 90, category: "security" },
+    { name: "Cloud Security (AWS/Azure)", level: 85, category: "security" },
+    { name: "SIEM & Threat Monitoring", level: 80, category: "security" },
+    { name: "Vulnerability Assessment", level: 85, category: "security" },
+    { name: "IAM & Access Controls", level: 80, category: "security" },
+    
+    // Development Skills
+    { name: "HTML/CSS", level: 90, category: "frontend" },
     { name: "JavaScript", level: 85, category: "frontend" },
     { name: "React", level: 80, category: "frontend" },
     { name: "TypeScript", level: 75, category: "frontend" },
-    { name: "Node.js", level: 70, category: "backend" },
-    { name: "Express", level: 65, category: "backend" },
-    { name: "MongoDB", level: 60, category: "backend" },
-    { name: "SQL", level: 65, category: "backend" },
-    { name: "UI Design", level: 75, category: "design" },
-    { name: "UX Design", level: 70, category: "design" },
-    { name: "Figma", level: 80, category: "design" },
+    
+    // Backend Skills
+    { name: "Node.js", level: 80, category: "backend" },
+    { name: "Python", level: 85, category: "backend" },
+    { name: "SQL/Databases", level: 75, category: "backend" },
+    { name: "API Development", level: 70, category: "backend" },
   ];
 
   useEffect(() => {
@@ -49,9 +55,9 @@ export function Skills() {
     };
   }, []);
 
+  const securitySkills = skills.filter(skill => skill.category === "security");
   const frontendSkills = skills.filter(skill => skill.category === "frontend");
   const backendSkills = skills.filter(skill => skill.category === "backend");
-  const designSkills = skills.filter(skill => skill.category === "design");
 
   return (
     <section
@@ -62,16 +68,16 @@ export function Skills() {
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-primary text-lg font-medium mb-2">My Skills</h2>
-          <h3 className="text-3xl md:text-4xl font-bold mb-4">What I Can Do</h3>
+          <h3 className="text-3xl md:text-4xl font-bold mb-4">Technical Expertise</h3>
           <div className="w-20 h-1 bg-primary mx-auto"></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className={`shadow-sm border border-border ${isVisible ? "animate-fadeIn" : "opacity-0"}`} style={{ animationDelay: "0.2s" }}>
             <CardContent className="p-6">
-              <h4 className="text-2xl font-bold mb-6 text-center">Frontend Development</h4>
+              <h4 className="text-2xl font-bold mb-6 text-center">Security Expertise</h4>
               <div className="space-y-6">
-                {frontendSkills.map((skill, index) => (
+                {securitySkills.map((skill, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between">
                       <span className="font-medium">{skill.name}</span>
@@ -92,9 +98,9 @@ export function Skills() {
 
           <Card className={`shadow-sm border border-border ${isVisible ? "animate-fadeIn" : "opacity-0"}`} style={{ animationDelay: "0.4s" }}>
             <CardContent className="p-6">
-              <h4 className="text-2xl font-bold mb-6 text-center">Backend Development</h4>
+              <h4 className="text-2xl font-bold mb-6 text-center">Frontend Development</h4>
               <div className="space-y-6">
-                {backendSkills.map((skill, index) => (
+                {frontendSkills.map((skill, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between">
                       <span className="font-medium">{skill.name}</span>
@@ -115,9 +121,9 @@ export function Skills() {
 
           <Card className={`shadow-sm border border-border ${isVisible ? "animate-fadeIn" : "opacity-0"}`} style={{ animationDelay: "0.6s" }}>
             <CardContent className="p-6">
-              <h4 className="text-2xl font-bold mb-6 text-center">Design</h4>
+              <h4 className="text-2xl font-bold mb-6 text-center">Backend Development</h4>
               <div className="space-y-6">
-                {designSkills.map((skill, index) => (
+                {backendSkills.map((skill, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between">
                       <span className="font-medium">{skill.name}</span>
