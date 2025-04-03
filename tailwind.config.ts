@@ -58,6 +58,12 @@ export default {
           foreground: 'hsl(var(--card-foreground))'
         },
       },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        sans: ['Montserrat', 'sans-serif'],
+        mono: ['Roboto Mono', 'monospace'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -95,7 +101,12 @@ export default {
         "progress-fill": {
           "0%": { width: "0%" },
           "100%": { width: "var(--progress-value)" }
-        }
+        },
+        "pulse-ring": {
+          "0%": { transform: "scale(0.8)", opacity: "0" },
+          "50%": { transform: "scale(1)", opacity: "0.5" },
+          "100%": { transform: "scale(1.4)", opacity: "0" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -105,11 +116,8 @@ export default {
         fadeIn: "fadeIn 0.5s ease-out forwards",
         float: "float 3s ease-in-out infinite",
         scale: "scale 0.3s ease-out forwards",
-        "progress-fill": "progress-fill 1.5s ease-out forwards"
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['Fira Code', 'monospace'],
+        "progress-fill": "progress-fill 1.5s ease-out forwards",
+        "pulse-ring": "pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite"
       },
       boxShadow: {
         glow: "0 0 10px rgba(138, 75, 175, 0.5), 0 0 20px rgba(138, 75, 175, 0.3)",
@@ -117,10 +125,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'hero-pattern': "url('/noise.png')",
+        'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+        'dark-glass-gradient': 'linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%)',
       },
-      transitionDuration: {
-        '2000': '2000ms',
-      }
     }
   },
   plugins: [require("tailwindcss-animate")],

@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,13 +19,22 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu when changing routes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const navItems = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
-    { name: "Skills", href: "#skills" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "Full Stack", href: "/fullstack" },
+    { name: "Security", href: "/security" }
   ];
+
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
     <header 
@@ -33,19 +44,23 @@ export function Header() {
     >
       <div className="container flex items-center justify-between">
         {/* Logo */}
-        <a href="#home" className="text-2xl font-bold text-primary">Portfolio</a>
+        <Link to="/" className="text-2xl font-bold text-primary">Portfolio</Link>
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <ul className="flex items-center space-x-8">
             {navItems.map((item) => (
               <li key={item.name}>
-                <a 
-                  href={item.href}
-                  className="text-foreground/80 hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
+                <Link 
+                  to={item.href}
+                  className={`transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-primary after:transition-all ${
+                    isActive(item.href) 
+                      ? "text-primary after:w-full" 
+                      : "text-foreground/80 hover:text-primary after:w-0 hover:after:w-full"
+                  }`}
                 >
                   {item.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -73,13 +88,16 @@ export function Header() {
             <ul className="flex flex-col space-y-4">
               {navItems.map((item) => (
                 <li key={item.name}>
-                  <a 
-                    href={item.href}
-                    className="block py-2 text-foreground/80 hover:text-primary transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
+                  <Link 
+                    to={item.href}
+                    className={`block py-2 transition-colors ${
+                      isActive(item.href) 
+                        ? "text-primary font-medium" 
+                        : "text-foreground/80 hover:text-primary"
+                    }`}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
