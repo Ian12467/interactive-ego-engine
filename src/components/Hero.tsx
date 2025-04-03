@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export function Hero() {
   const typingRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,11 @@ export function Hero() {
       
       <div className="container flex flex-col items-center text-center">
         <div className="flex flex-col items-center space-y-6 max-w-3xl mx-auto">
+          <Avatar className="w-32 h-32 border-4 border-primary/20 shadow-lg mb-2">
+            <AvatarImage src="/lovable-uploads/a2fa06d3-20e5-4f93-95fe-d4906d12a6fc.png" alt="Ian Ochieng' Otieno" />
+            <AvatarFallback>IO</AvatarFallback>
+          </Avatar>
+          
           <h2 className="text-lg md:text-xl text-muted-foreground">Hello, I'm</h2>
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
