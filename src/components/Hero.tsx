@@ -37,7 +37,7 @@ export function Hero() {
           <h2 className="text-lg md:text-xl text-muted-foreground">Hello, I'm</h2>
           
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-            John Developer
+            Ian Ochieng' Otieno
           </h1>
           
           <div className="my-4 h-16">
@@ -45,12 +45,12 @@ export function Hero() {
               ref={typingRef}
               className="typing-container animate-blink font-mono text-xl md:text-2xl"
             >
-              Full Stack Developer | UI/UX Designer | Problem Solver
+              Fullstack Developer | Cloud & Network Security Specialist
             </div>
           </div>
           
           <p className="text-lg text-muted-foreground max-w-xl">
-            I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. I specialize in crafting clean, elegant solutions to complex problems.
+            I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. I specialize in crafting secure, scalable solutions to complex problems with a focus on cloud and network security.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 mt-6">

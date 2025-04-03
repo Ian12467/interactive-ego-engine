@@ -9,11 +9,11 @@ export function Footer() {
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground mb-4 md:mb-0">
-            © {currentYear} My Portfolio. All rights reserved.
+            © {currentYear} Ian Ochieng' Otieno. All rights reserved.
           </p>
           
           <p className="flex items-center gap-1 text-muted-foreground">
-            Built with <Heart className="h-4 w-4 text-red-500 animate-pulse" /> by John Developer
+            Built with <Heart className="h-4 w-4 text-red-500 animate-pulse" /> by Ian Ochieng' Otieno
           </p>
         </div>
       </div>
