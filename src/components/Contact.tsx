@@ -150,7 +150,7 @@ export function Contact() {
                 <a href="https://www.linkedin.com/in/ian-ochieng-26152b222/" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                   <Linkedin className="w-5 h-5 text-primary" />
                 </a>
-                <a href="ianochieng277@gmail.com" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <a href="https://mail.google.com/mail/?view=cm&to=ianochieng277@gmail.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                   <Mail className="w-5 h-5 text-primary" />
                 </a>
               </div>
