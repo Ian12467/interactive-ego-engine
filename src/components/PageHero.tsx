@@ -1,16 +1,25 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface PageHeroProps {
   title: string;
   subtitle: string;
   description: string;
+  backgroundImages?: string[];
   backgroundImage?: string;
 }
 
-export function PageHero({ title, subtitle, description, backgroundImage }: PageHeroProps) {
+export function PageHero({ 
+  title, 
+  subtitle, 
+  description, 
+  backgroundImages, 
+  backgroundImage 
+}: PageHeroProps) {
   const typingRef = useRef<HTMLDivElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,14 +43,48 @@ export function PageHero({ title, subtitle, description, backgroundImage }: Page
     };
   }, []);
 
-  return (
-    <section className="min-h-[80vh] flex flex-col justify-center pb-10 pt-24 relative overflow-hidden">
-      {backgroundImage && (
+  useEffect(() => {
+    if (!backgroundImages || backgroundImages.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Change image every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, [backgroundImages]);
+
+  const renderBackgroundImage = () => {
+    if (backgroundImages && backgroundImages.length > 0) {
+      return (
+        <div className="absolute inset-0 -z-10">
+          {backgroundImages.map((img, index) => (
+            <div 
+              key={index}
+              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
+                index === currentImageIndex ? "opacity-20" : "opacity-0"
+              }`}
+              style={{ backgroundImage: `url(${img})` }}
+            />
+          ))}
+        </div>
+      );
+    } else if (backgroundImage) {
+      return (
         <div 
           className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-20" 
           style={{ backgroundImage: `url(${backgroundImage})` }}
         />
-      )}
+      );
+    }
+    
+    return null;
+  };
+
+  return (
+    <section className="min-h-[80vh] flex flex-col justify-center pb-10 pt-24 relative overflow-hidden">
+      {renderBackgroundImage()}
       <div className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent -z-10" />
       
       <div className="container flex flex-col items-center text-center">
