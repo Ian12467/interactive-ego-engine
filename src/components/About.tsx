@@ -68,13 +68,12 @@ export function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className={`space-y-6 ${isVisible ? "animate-fadeIn" : "opacity-0"}`} style={{ animationDelay: "0.2s" }}>
             <h3 className="text-2xl font-bold">
-            PEngineering the Future: Code, Cloud & Cybersecurity 🔐
+              Engineering the Future: Code, Cloud & Cybersecurity 
             </h3>
             <p className="text-muted-foreground">
-              With a strong foundation in Software Engineering and Cloud & Network Security, I specialize in 
-              building scalable web applications while securing modern digital infrastructures. My journey began with
-              a deep curiosity for technology, problem-solving, and cybersecurity, leading me to develop expertise
-              in full-stack development, cloud architecture, and network defense strategies.
+              Technology is my playground, and I thrive at the intersection of Software Engineering, Cloud
+              Computing, and Cybersecurity. With a passion for building scalable, high-performance applications
+              and securing digital infrastructures, I specialize in:
             </p>
             <p className="text-muted-foreground">
               💡 Developing cutting-edge web applications with intuitive user experiences.<br />
