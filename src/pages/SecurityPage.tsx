@@ -4,12 +4,33 @@ import { Footer } from "@/components/Footer";
 import { ExperienceCard } from "@/components/ExperienceCard";
 import { TechnologyCard } from "@/components/TechnologyCard";
 import { PageHero } from "@/components/PageHero";
-import { useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { ArrowRight, Shield, Cpu, Lock, Database, Server, HardDrive } from "lucide-react";
 
 const SecurityPage = () => {
   // Scroll to top when the page loads
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+  
+  // State for controlling background image carousel
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  
+  // Background images array
+  const bgImages = [
+    "/lovable-uploads/70ee315a-a1da-4975-9c0d-c3914d001f26.png",
+    "/lovable-uploads/65b6c525-c2bc-400d-b1f3-40376e77fb7d.png",
+    "/lovable-uploads/fe1954de-2d07-4edc-843f-02f4362552aa.png"
+  ];
+  
+  // Cycle through background images every 8 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % bgImages.length);
+    }, 8000);
+    
+    return () => clearInterval(interval);
   }, []);
   
   const cloudSecuritySkills = [
@@ -34,6 +55,14 @@ const SecurityPage = () => {
     { name: "OSSEC", level: 70 },
     { name: "Log Analysis", level: 85 },
     { name: "Incident Response", level: 80 },
+  ];
+
+  const securityCertifications = [
+    "CompTIA Security+",
+    "AWS Certified Security - Specialty",
+    "Certified Ethical Hacker (CEH)",
+    "OSCP (In Progress)",
+    "Microsoft SC-200"
   ];
 
   const experiences = [
@@ -121,19 +150,109 @@ const SecurityPage = () => {
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
       <main className="relative">
-        <PageHero 
-          title="Cloud & Network Security Specialist"
-          subtitle="Securing digital infrastructure with advanced protection strategies"
-          description="A Cybersecurity & Cloud Security expert specializing in penetration testing, threat detection, and cloud security hardening. Experienced in securing networks, managing SIEM tools, and deploying security controls."
-          backgroundImage="/matrix-background.jpg"
-        />
+        {/* Background image with animation */}
+        <div className="fixed inset-0 z-[-1] transition-opacity duration-1000">
+          {bgImages.map((img, index) => (
+            <div 
+              key={index}
+              className={`absolute inset-0 bg-black bg-opacity-80 transition-opacity duration-1000 ${
+                index === currentBgIndex ? "opacity-30" : "opacity-0"
+              }`}
+              style={{
+                backgroundImage: `url(${img})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-background/95" />
+        </div>
 
-        <section id="skills" className="py-20 bg-secondary/50 dark:bg-secondary/10 relative">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10" 
-            style={{ backgroundImage: "url('/coding-background.jpg')" }}
-          />
-          <div className="container relative z-10">
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center px-6 py-24 overflow-hidden">
+          <div className="container mx-auto relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    <Shield className="h-4 w-4" /> 
+                    <span className="text-sm font-medium">Cybersecurity Expert</span>
+                  </div>
+                  <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                    <span className="text-green-400">Defending</span> Digital 
+                    <span className="block mt-3">Assets in the Modern</span>
+                    <span className="bg-gradient-to-r from-green-400 to-primary bg-clip-text text-transparent">Threat Landscape</span>
+                  </h1>
+                </div>
+                
+                <p className="text-lg text-muted-foreground max-w-lg">
+                  Specialized in penetration testing, cloud security, and threat detection. 
+                  I help organizations identify vulnerabilities before attackers can exploit them.
+                </p>
+                
+                <div className="flex flex-wrap gap-3">
+                  {securityCertifications.map((cert, index) => (
+                    <Badge key={index} variant="outline" className="border-green-500/50 text-green-400 bg-green-500/10 backdrop-blur-sm px-3 py-1">
+                      {cert}
+                    </Badge>
+                  ))}
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <a 
+                    href="#skills" 
+                    className="px-6 py-3 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium flex items-center gap-2 group transition-all duration-300"
+                  >
+                    View My Skills
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a 
+                    href="#experience" 
+                    className="px-6 py-3 bg-transparent hover:bg-white/5 text-white border border-white/20 rounded-lg font-medium backdrop-blur-sm"
+                  >
+                    Experience
+                  </a>
+                </div>
+              </div>
+              
+              <div className="relative hidden lg:block">
+                <div className="absolute inset-0 bg-gradient-radial from-primary/20 to-transparent -z-10" />
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-6">
+                    <div className="glass bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/10">
+                      <Cpu className="h-8 w-8 text-green-400 mb-3" />
+                      <h3 className="text-lg font-semibold text-white">Network Security</h3>
+                      <p className="text-sm text-white/70 mt-2">Protecting infrastructures from unauthorized access and attacks</p>
+                    </div>
+                    <div className="glass bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/10 translate-y-12">
+                      <Server className="h-8 w-8 text-green-400 mb-3" />
+                      <h3 className="text-lg font-semibold text-white">SIEM Solutions</h3>
+                      <p className="text-sm text-white/70 mt-2">Monitoring and responding to security events in real-time</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-6 translate-y-16">
+                    <div className="glass bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/10">
+                      <Lock className="h-8 w-8 text-green-400 mb-3" />
+                      <h3 className="text-lg font-semibold text-white">Cloud Security</h3>
+                      <p className="text-sm text-white/70 mt-2">Securing cloud environments on AWS, Azure, and GCP</p>
+                    </div>
+                    <div className="glass bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/10">
+                      <Database className="h-8 w-8 text-green-400 mb-3" />
+                      <h3 className="text-lg font-semibold text-white">Data Protection</h3>
+                      <p className="text-sm text-white/70 mt-2">Implementing encryption and access controls for sensitive data</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="absolute -bottom-10 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-background z-10" />
+        </section>
+
+        <section id="skills" className="py-20 bg-background relative z-20">
+          <div className="container">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">Technical Expertise</h2>
               <h3 className="text-3xl md:text-4xl font-bold mb-4">Skills & Technologies</h3>
@@ -160,7 +279,7 @@ const SecurityPage = () => {
           </div>
         </section>
 
-        <section id="experience" className="py-20">
+        <section id="experience" className="py-20 bg-black/5 relative z-20">
           <div className="container">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">Professional Journey</h2>
