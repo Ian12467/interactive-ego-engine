@@ -144,13 +144,13 @@ export function Contact() {
             <div className="mt-8">
               <h5 className="font-medium mb-4">Follow me</h5>
               <div className="flex gap-4">
-                <a href="#" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <a href="https://www.github.com/Ian12467/" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                   <Github className="w-5 h-5 text-primary" />
                 </a>
-                <a href="#" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <a href="https://www.linkedin.com/in/ian-ochieng-26152b222/" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                   <Linkedin className="w-5 h-5 text-primary" />
                 </a>
-                <a href="#" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <a href="ianochieng277@gmail.com" className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                   <Mail className="w-5 h-5 text-primary" />
                 </a>
               </div>
