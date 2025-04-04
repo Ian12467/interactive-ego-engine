@@ -30,7 +30,6 @@ export function Header() {
     { name: "Security", href: "/security" },
     { name: "UI/UX", href: "/uiux" },
     { name: "Projects", href: "/projects" },
-    { name: "About", href: "/#about" },
     { name: "Contact", href: "/#contact" }
   ];
 
@@ -112,3 +111,5 @@ export function Header() {
     </header>
   );
 }
+
+export default Header;
