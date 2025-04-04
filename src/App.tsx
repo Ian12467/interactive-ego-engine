@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import FullStackPage from "./pages/FullStackPage";
 import SecurityPage from "./pages/SecurityPage";
+import UiUxPage from "./pages/UiUxPage";
+import ProjectsPage from "./pages/ProjectsPage";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/fullstack" element={<FullStackPage />} />
           <Route path="/security" element={<SecurityPage />} />
+          <Route path="/uiux" element={<UiUxPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

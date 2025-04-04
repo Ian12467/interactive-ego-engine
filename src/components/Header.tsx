@@ -27,12 +27,17 @@ export function Header() {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Full Stack", href: "/fullstack" },
-    { name: "Security", href: "/security" }
+    { name: "Security", href: "/security" },
+    { name: "UI/UX", href: "/uiux" },
+    { name: "Projects", href: "/projects" },
+    { name: "About", href: "/#about" },
+    { name: "Contact", href: "/#contact" }
   ];
 
   const isActive = (path: string) => {
     if (path === "/" && location.pathname === "/") return true;
-    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    if (path.startsWith("/#") && location.pathname === "/") return true;
+    if (path !== "/" && !path.startsWith("/#") && location.pathname.startsWith(path)) return true;
     return false;
   };
 
