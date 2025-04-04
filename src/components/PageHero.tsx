@@ -6,9 +6,10 @@ interface PageHeroProps {
   title: string;
   subtitle: string;
   description: string;
+  backgroundImage?: string;
 }
 
-export function PageHero({ title, subtitle, description }: PageHeroProps) {
+export function PageHero({ title, subtitle, description, backgroundImage }: PageHeroProps) {
   const typingRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -35,6 +36,12 @@ export function PageHero({ title, subtitle, description }: PageHeroProps) {
 
   return (
     <section className="min-h-[80vh] flex flex-col justify-center pb-10 pt-24 relative overflow-hidden">
+      {backgroundImage && (
+        <div 
+          className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-20" 
+          style={{ backgroundImage: `url(${backgroundImage})` }}
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent -z-10" />
       
       <div className="container flex flex-col items-center text-center">

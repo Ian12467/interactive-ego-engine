@@ -118,17 +118,22 @@ const SecurityPage = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
-      <main>
+      <main className="relative">
         <PageHero 
           title="Cloud & Network Security Specialist"
           subtitle="Securing digital infrastructure with advanced protection strategies"
           description="A Cybersecurity & Cloud Security expert specializing in penetration testing, threat detection, and cloud security hardening. Experienced in securing networks, managing SIEM tools, and deploying security controls."
+          backgroundImage="/matrix-background.jpg"
         />
 
-        <section id="skills" className="py-20 bg-secondary/50 dark:bg-secondary/10">
-          <div className="container">
+        <section id="skills" className="py-20 bg-secondary/50 dark:bg-secondary/10 relative">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10" 
+            style={{ backgroundImage: "url('/coding-background.jpg')" }}
+          />
+          <div className="container relative z-10">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">Technical Expertise</h2>
               <h3 className="text-3xl md:text-4xl font-bold mb-4">Skills & Technologies</h3>
