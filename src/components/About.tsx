@@ -68,17 +68,24 @@ export function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className={`space-y-6 ${isVisible ? "animate-fadeIn" : "opacity-0"}`} style={{ animationDelay: "0.2s" }}>
             <h3 className="text-2xl font-bold">
-              A passionate developer with a creative mind
+            PEngineering the Future: Code, Cloud & Cybersecurity 🔐
             </h3>
             <p className="text-muted-foreground">
-              With over 5 years of experience in web development, I'm dedicated to crafting 
-              exceptional digital experiences. My journey began with a fascination for 
-              creating things that live on the internet, and this passion continues to drive me today.
+              With a strong foundation in Software Engineering and Cloud & Network Security, I specialize in 
+              building scalable web applications while securing modern digital infrastructures. My journey began with
+              a deep curiosity for technology, problem-solving, and cybersecurity, leading me to develop expertise
+              in full-stack development, cloud architecture, and network defense strategies.
             </p>
             <p className="text-muted-foreground">
-              I focus on building accessible, inclusive products and digital experiences for the web. 
-              My approach combines technical skills with creative problem-solving to deliver solutions 
-              that not only meet but exceed client expectations.
+              💡 Developing cutting-edge web applications with intuitive user experiences.<br />
+              ☁️ Optimizing cloud architectures for efficiency, reliability, and security.<br />
+              🛡️ Fortifying networks against cyber threats through proactive defense strategies.
+            </p>
+            <p className="text-muted-foreground">
+              From writing clean, scalable code to deploying secure cloud solutions and mitigating cyber risks, I believe in innovation with impact. Every line of code and security measure is a step toward a smarter, safer digital world.
+            </p>
+            <p className="text-muted-foreground font-bold">
+              🔹 Let’s build, secure, and innovate—one solution at a time.
             </p>
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="p-4 bg-background rounded-lg shadow-sm">

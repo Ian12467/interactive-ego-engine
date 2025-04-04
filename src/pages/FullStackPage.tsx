@@ -91,7 +91,7 @@ const FullStackPage = () => {
     },
     {
       title: "Secure File Sharing App",
-      company: "University Capstone Project",
+      company: "Independent",
       period: "2022",
       responsibilities: [
         "Designed a file-sharing app with end-to-end encryption",
