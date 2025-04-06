@@ -18,8 +18,13 @@ export function ThemeToggle() {
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
+      // Ensure dark mode specific variables are set when switching to dark
+      document.documentElement.style.setProperty('--primary', '266 75% 59%');
+      document.documentElement.style.setProperty('--ring', '266 75% 59%');
     } else {
       document.documentElement.classList.remove("dark");
+      // Restore the dynamic theme colors when returning to light mode
+      // (BackgroundCarousel will handle actual values in its useEffect)
     }
     localStorage.setItem("theme", theme);
   }, [theme]);

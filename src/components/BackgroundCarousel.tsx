@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { getThemeColorFromImage, getSecondaryColorFromPrimary, getAccentColorFromPrimary } from '@/utils/colorUtils';
 
 export function BackgroundCarousel() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -24,6 +25,26 @@ export function BackgroundCarousel() {
     
     return () => clearInterval(interval);
   }, [backgroundImages.length]);
+
+  // Update CSS variables based on current image
+  useEffect(() => {
+    const currentImage = backgroundImages[currentImageIndex];
+    const primaryColor = getThemeColorFromImage(currentImage);
+    const secondaryColor = getSecondaryColorFromPrimary(primaryColor);
+    const accentColor = getAccentColorFromPrimary(primaryColor);
+    
+    // Set CSS variables for theme colors
+    document.documentElement.style.setProperty('--primary', primaryColor);
+    document.documentElement.style.setProperty('--accent', accentColor);
+    
+    // Only set these in light mode to prevent dark mode contrast issues
+    if (!document.documentElement.classList.contains('dark')) {
+      document.documentElement.style.setProperty('--ring', primaryColor);
+    }
+    
+    // Add a subtle transition effect to all color changes
+    document.documentElement.style.setProperty('transition', 'background-color 1s ease, color 1s ease, border-color 1s ease');
+  }, [currentImageIndex, backgroundImages]);
 
   return (
     <div className="fixed inset-0 -z-10">

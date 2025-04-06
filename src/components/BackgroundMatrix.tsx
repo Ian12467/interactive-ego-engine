@@ -41,8 +41,12 @@ export function BackgroundMatrix({ opacity = 0.08 }: BackgroundMatrixProps) {
       ctx.fillStyle = `rgba(0, 0, 0, 0.04)`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Get current theme color - this uses the CSS variable set by BackgroundCarousel
+      const computedStyle = getComputedStyle(document.documentElement);
+      const primaryColor = computedStyle.getPropertyValue('--primary').trim();
+      
       // Set text color to primary theme color with custom opacity
-      ctx.fillStyle = `hsla(266, 75%, 49%, ${opacity})`;
+      ctx.fillStyle = `hsla(${primaryColor}, ${opacity})`;
       ctx.font = `${fontSize}px monospace`;
 
       // Loop through each drop
