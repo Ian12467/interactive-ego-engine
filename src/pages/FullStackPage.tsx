@@ -1,22 +1,34 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ExperienceCard } from "@/components/ExperienceCard";
 import { TechnologyCard } from "@/components/TechnologyCard";
 import { PageHero } from "@/components/PageHero";
 import { Badge } from "@/components/ui/badge";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const FullStackPage = () => {
+  const [bgImageIndex, setBgImageIndex] = useState(0);
+  const isMobile = useIsMobile();
+  
   // Scroll to top when the page loads
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   
+  useEffect(() => {
+    // Rotate background images every 8 seconds
+    const interval = setInterval(() => {
+      setBgImageIndex(prev => (prev + 1) % backgroundImages.length);
+    }, 8000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   const backgroundImages = [
-    "public/lovable-uploads/908838c6-7268-4e9f-af10-3408186ac695.png",
-    "public/lovable-uploads/ceed8507-09a0-48a9-9865-fef675240b26.png",
-    "public/lovable-uploads/fc35efc2-00f1-49f7-9e6c-b38efd9b5e14.png"
+    "/lovable-uploads/908838c6-7268-4e9f-af10-3408186ac695.png",
+    "/lovable-uploads/ceed8507-09a0-48a9-9865-fef675240b26.png",
+    "/lovable-uploads/fc35efc2-00f1-49f7-9e6c-b38efd9b5e14.png"
   ];
 
   const frontendSkills = [
@@ -124,19 +136,49 @@ const FullStackPage = () => {
     }
   ];
 
-  return (
-    <div className="flex flex-col min-h-screen bg-background/95 backdrop-blur-sm">
-      <Header />
-      <main>
-        <PageHero 
-          title="Full Stack Developer"
-          subtitle="Creating robust, scalable, and secure web applications"
-          description="A highly skilled Full Stack Developer with expertise in modern web technologies, databases, and cloud deployment. Passionate about scalable applications, API development, and DevOps pipelines."
-          backgroundImages={backgroundImages}
-        />
+  // Render background image for specific section
+  const renderSectionBackground = (index: number) => (
+    <div className="absolute inset-0 -z-10">
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-fixed opacity-10 transition-opacity duration-1000"
+        style={{ backgroundImage: `url(${backgroundImages[index]})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background/80" />
+    </div>
+  );
 
-        <section id="skills" className="py-20 bg-secondary/80 dark:bg-secondary/20 backdrop-blur-sm">
-          <div className="container">
+  return (
+    <div className="flex flex-col min-h-screen bg-background/95 backdrop-blur-sm relative overflow-hidden">
+      <Header />
+      
+      <main className="flex-grow">
+        {/* Hero Section with Background */}
+        <section className="relative min-h-screen">
+          <div className="absolute inset-0 -z-10">
+            {backgroundImages.map((img, index) => (
+              <div 
+                key={index}
+                className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                  index === bgImageIndex ? "opacity-20" : "opacity-0"
+                }`}
+                style={{ backgroundImage: `url(${img})` }}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background/90" />
+          </div>
+          
+          <PageHero 
+            title="Full Stack Developer"
+            subtitle="Creating robust, scalable, and secure web applications"
+            description="A highly skilled Full Stack Developer with expertise in modern web technologies, databases, and cloud deployment. Passionate about scalable applications, API development, and DevOps pipelines."
+            backgroundImages={backgroundImages}
+          />
+        </section>
+
+        {/* Skills Section */}
+        <section id="skills" className="py-20 relative">
+          {renderSectionBackground(1)}
+          <div className="container relative z-10">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">Technical Expertise</h2>
               <h3 className="text-3xl md:text-4xl font-bold mb-4">Skills & Technologies</h3>
@@ -163,8 +205,10 @@ const FullStackPage = () => {
           </div>
         </section>
 
-        <section id="tech-stack" className="py-16 bg-background/95">
-          <div className="container">
+        {/* Tech Stack Section */}
+        <section id="tech-stack" className="py-16 relative">
+          {renderSectionBackground(2)}
+          <div className="container relative z-10">
             <div className="text-center mb-12">
               <h2 className="text-primary text-lg font-medium mb-2">Tools & Technologies</h2>
               <h3 className="text-3xl md:text-4xl font-bold mb-4">My Tech Stack</h3>
@@ -178,7 +222,7 @@ const FullStackPage = () => {
                 <Badge 
                   key={i} 
                   variant={i % 3 === 0 ? "default" : (i % 3 === 1 ? "secondary" : "outline")}
-                  className="text-sm px-3 py-1 transition-all hover:scale-110 hover:shadow-md"
+                  className="text-sm px-3 py-1 transition-all hover:scale-110 hover:shadow-md backdrop-blur-sm"
                 >
                   {tech}
                 </Badge>
@@ -187,8 +231,10 @@ const FullStackPage = () => {
           </div>
         </section>
 
-        <section id="experience" className="py-20 bg-gradient-to-b from-background/95 to-secondary/50 dark:from-background/95 dark:to-secondary/10">
-          <div className="container">
+        {/* Experience Section */}
+        <section id="experience" className="py-20 relative">
+          {renderSectionBackground(0)}
+          <div className="container relative z-10">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">Professional Journey</h2>
               <h3 className="text-3xl md:text-4xl font-bold mb-4">Work Experience</h3>
@@ -210,15 +256,29 @@ const FullStackPage = () => {
           </div>
         </section>
         
-        <section id="cta" className="py-16 bg-primary/5 dark:bg-primary/10 backdrop-blur-sm">
-          <div className="container text-center">
+        {/* CTA Section */}
+        <section id="cta" className="py-16 relative">
+          <div className="absolute inset-0 -z-10">
+            {backgroundImages.map((img, index) => (
+              <div 
+                key={index}
+                className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                  (index + 2) % 3 === bgImageIndex ? "opacity-15" : "opacity-0"
+                }`}
+                style={{ backgroundImage: `url(${img})` }}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/10 to-primary/5 backdrop-blur-sm" />
+          </div>
+          
+          <div className="container text-center relative z-10">
             <h2 className="text-3xl font-bold mb-4">Ready to Build Something Amazing?</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Let's collaborate on your next project and create efficient, scalable, and secure web applications that drive business growth.
             </p>
             <a 
               href="#contact" 
-              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 hover:shadow-primary/40"
             >
               Get In Touch
             </a>
