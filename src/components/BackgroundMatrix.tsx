@@ -5,7 +5,7 @@ interface BackgroundMatrixProps {
   opacity?: number;
 }
 
-export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
+export function BackgroundMatrix({ opacity = 0.08 }: BackgroundMatrixProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
     };
 
     // Animation loop with slightly faster speed for more dynamic effect
-    const interval = setInterval(drawMatrix, 100);
+    const interval = setInterval(drawMatrix, 80);
 
     return () => {
       clearInterval(interval);
@@ -75,7 +75,7 @@ export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-3]"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-2]"
     />
   );
 }

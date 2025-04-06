@@ -28,12 +28,15 @@ const Index = () => {
   return (
     <div className={`flex flex-col min-h-screen transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <Header />
-      <BackgroundMatrix opacity={0.05} />
+      
+      {/* Background elements - z-index ordering is important */}
+      <BackgroundCarousel />
+      <BackgroundMatrix opacity={0.08} />
+      
       <main className="relative">
         {/* Cyber-themed gradient overlay for entire page */}
-        <div className="fixed inset-0 bg-gradient-to-b from-background via-background/90 to-background pointer-events-none z-[-1]"></div>
+        <div className="fixed inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background pointer-events-none z-[-1]"></div>
         
-        <BackgroundCarousel />
         <Hero />
         <About />
         

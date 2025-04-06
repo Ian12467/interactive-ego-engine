@@ -31,15 +31,15 @@ export function BackgroundCarousel() {
         <div 
           key={index}
           className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? "opacity-15" : "opacity-0"
+            index === currentImageIndex ? "opacity-30" : "opacity-0"
           }`}
           style={{ backgroundImage: `url(${img})` }}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-background/90 z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-background/80 z-10"></div>
       
       {/* Cyber-style overlay patterns */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,135,245,0.1)_0%,transparent_70%)] opacity-60 mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,135,245,0.2)_0%,transparent_70%)] opacity-70 mix-blend-overlay"></div>
     </div>
   );
 }
