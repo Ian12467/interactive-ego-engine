@@ -24,7 +24,7 @@ export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Matrix character set
+    // Matrix character set - using binary to enhance cyber theme
     const chars = '01010101';
     const fontSize = 14;
     const columns = Math.floor(canvas.width / fontSize);
@@ -63,8 +63,8 @@ export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
       }
     };
 
-    // Animation loop
-    const interval = setInterval(drawMatrix, 120);
+    // Animation loop with slightly faster speed for more dynamic effect
+    const interval = setInterval(drawMatrix, 100);
 
     return () => {
       clearInterval(interval);
@@ -75,7 +75,7 @@ export function BackgroundMatrix({ opacity = 0.05 }: BackgroundMatrixProps) {
   return (
     <canvas 
       ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-5]"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-3]"
     />
   );
 }

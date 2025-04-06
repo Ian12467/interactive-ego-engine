@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect } from "react";
 import { BackgroundMatrix } from "@/components/BackgroundMatrix";
+import { BackgroundCarousel } from "@/components/BackgroundCarousel";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -32,6 +33,7 @@ const Index = () => {
         {/* Cyber-themed gradient overlay for entire page */}
         <div className="fixed inset-0 bg-gradient-to-b from-background via-background/90 to-background pointer-events-none z-[-1]"></div>
         
+        <BackgroundCarousel />
         <Hero />
         <About />
         

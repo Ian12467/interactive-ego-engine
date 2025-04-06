@@ -1,0 +1,45 @@
+
+import { useState, useEffect } from 'react';
+
+export function BackgroundCarousel() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Array of background images
+  const backgroundImages = [
+    "/lovable-uploads/32b9e253-ab1b-425a-bd7f-16ffb967cf91.png",
+    "/lovable-uploads/d3031f0b-d512-4ac6-82e7-feb32c295e9f.png",
+    "/lovable-uploads/86196035-9d98-45d8-945b-e91fa6307a60.png",
+    "/lovable-uploads/890692ba-61cc-4487-b9a7-87fe12f74340.png",
+    "/lovable-uploads/35e23ad3-8e62-4423-a75e-8df1dd504c58.png",
+    "/lovable-uploads/61678bbf-d151-485d-a58b-4c4220243028.png"
+  ];
+
+  // Image rotation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Change image every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
+
+  return (
+    <div className="fixed inset-0 -z-10">
+      {backgroundImages.map((img, index) => (
+        <div 
+          key={index}
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
+            index === currentImageIndex ? "opacity-15" : "opacity-0"
+          }`}
+          style={{ backgroundImage: `url(${img})` }}
+        />
+      ))}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-background/90 z-10"></div>
+      
+      {/* Cyber-style overlay patterns */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,135,245,0.1)_0%,transparent_70%)] opacity-60 mix-blend-overlay"></div>
+    </div>
+  );
+}
