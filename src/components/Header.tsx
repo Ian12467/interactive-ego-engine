@@ -30,7 +30,7 @@ export function Header() {
     { name: "Security", href: "/security" },
     { name: "UI/UX", href: "/uiux" },
     { name: "Projects", href: "/projects" },
-    { name: "Contact", href: "/#contact" }
+    { name: "Contact", href: location.pathname === "/" ? "/#contact" : "//#contact" }
   ];
 
   const isActive = (path: string) => {
@@ -39,6 +39,41 @@ export function Header() {
     if (path !== "/" && !path.startsWith("/#") && location.pathname.startsWith(path)) return true;
     return false;
   };
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.includes("#contact")) {
+      e.preventDefault();
+      
+      // If we're already on the home page, just scroll to the contact section
+      if (location.pathname === "/") {
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        // If we're on another page, navigate to home and then to contact section
+        // Store a flag in sessionStorage to scroll to contact after navigation
+        sessionStorage.setItem("scrollToContact", "true");
+        window.location.href = "/";
+      }
+    }
+  };
+
+  // Handle scrolling to contact after navigation
+  useEffect(() => {
+    const shouldScrollToContact = sessionStorage.getItem("scrollToContact") === "true";
+    if (shouldScrollToContact && location.pathname === "/") {
+      sessionStorage.removeItem("scrollToContact");
+      
+      // Need to wait for the DOM to be fully loaded
+      setTimeout(() => {
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 500);
+    }
+  }, [location.pathname]);
 
   return (
     <header 
@@ -57,6 +92,7 @@ export function Header() {
               <li key={item.name}>
                 <Link 
                   to={item.href}
+                  onClick={(e) => item.href.includes("#contact") && handleContactClick(e, item.href)}
                   className={`transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-primary after:transition-all ${
                     isActive(item.href) 
                       ? "text-primary after:w-full" 
@@ -94,6 +130,7 @@ export function Header() {
                 <li key={item.name}>
                   <Link 
                     to={item.href}
+                    onClick={(e) => item.href.includes("#contact") && handleContactClick(e, item.href)}
                     className={`block py-2 transition-colors ${
                       isActive(item.href) 
                         ? "text-primary font-medium" 

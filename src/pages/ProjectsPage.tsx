@@ -1,11 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
 import { PageHero } from "@/components/PageHero";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { ProjectsBackground } from "@/components/ProjectsBackground";
 import { 
   ArrowRight, 
   Code, 
@@ -13,7 +14,8 @@ import {
   Palette, 
   Github, 
   Link as LinkIcon, 
-  ExternalLink 
+  ExternalLink,
+  Loader
 } from "lucide-react";
 
 // Define project categories and filter options
@@ -33,6 +35,9 @@ interface Project {
 
 const ProjectsPage = () => {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('all');
+  const [isLoading, setIsLoading] = useState(true);
+  const [visibleProjects, setVisibleProjects] = useState<Project[]>([]);
+  const projectsRef = useRef<HTMLDivElement>(null);
   
   // Sample project data
   const projects: Project[] = [
@@ -162,9 +167,76 @@ const ProjectsPage = () => {
     }
   };
 
+  // Progressive loading of projects for better performance
+  useEffect(() => {
+    setIsLoading(true);
+    
+    // Use timeout to allow for filter transition
+    const timer = setTimeout(() => {
+      // Start with an empty array
+      setVisibleProjects([]);
+      
+      // Load projects in batches with small delay between each
+      const loadProjects = async () => {
+        const batchSize = 3;
+        const batches = Math.ceil(filteredProjects.length / batchSize);
+        
+        for (let i = 0; i < batches; i++) {
+          const start = i * batchSize;
+          const end = Math.min(start + batchSize, filteredProjects.length);
+          const batch = filteredProjects.slice(start, end);
+          
+          // Update visible projects with the new batch
+          setVisibleProjects(prev => [...prev, ...batch]);
+          
+          // Add a small delay between batches for smoother loading
+          if (i < batches - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        }
+        
+        setIsLoading(false);
+      };
+      
+      loadProjects();
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [filteredProjects]);
+
+  // Intersection observer to animate elements when they come into view
+  useEffect(() => {
+    if (!projectsRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fadeIn');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+    );
+    
+    const projectCards = projectsRef.current.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+      card.classList.add('opacity-0');
+      observer.observe(card);
+    });
+    
+    return () => {
+      projectCards.forEach(card => {
+        observer.unobserve(card);
+      });
+    };
+  }, [visibleProjects]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      <ProjectsBackground />
       <main className="flex-1">
         <PageHero 
           title="My Projects"
@@ -173,7 +245,7 @@ const ProjectsPage = () => {
         />
         
         {/* Filter Section */}
-        <section className="py-10 border-b border-border">
+        <section className="py-10 border-b border-border backdrop-blur-sm bg-background/50">
           <div className="container">
             <div className="flex flex-wrap justify-center gap-4">
               <Button 
@@ -222,50 +294,61 @@ const ProjectsPage = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects
-                .filter(project => project.featured)
-                .map(project => (
-                  <Card key={project.id} className="overflow-hidden hover-lift card-hover h-full flex flex-col">
-                    <div className="h-48 bg-primary/5 flex items-center justify-center relative">
-                      {getCategoryIcon(project.category)}
-                      <Badge className="absolute top-4 right-4">{getCategoryName(project.category)}</Badge>
-                    </div>
-                    <CardContent className="p-6 flex flex-col flex-1">
-                      <h4 className="text-xl font-bold mb-2">{project.title}</h4>
-                      <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tags.map(tag => (
-                          <Badge key={tag} variant="outline">{tag}</Badge>
-                        ))}
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader className="w-10 h-10 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div ref={projectsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {visibleProjects
+                  .filter(project => project.featured)
+                  .map((project, index) => (
+                    <Card 
+                      key={project.id} 
+                      className="project-card overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col bg-card/80 backdrop-blur-sm"
+                      style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                    >
+                      <div className="h-48 bg-primary/5 flex items-center justify-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background/20"></div>
+                        {getCategoryIcon(project.category)}
+                        <Badge className="absolute top-4 right-4 z-10">{getCategoryName(project.category)}</Badge>
                       </div>
-                      <div className="flex gap-3 mt-auto">
-                        {project.github && (
-                          <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                            <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="h-4 w-4" />
-                              Code
-                            </a>
-                          </Button>
-                        )}
-                        {project.live && (
-                          <Button size="sm" className="flex-1 gap-2" asChild>
-                            <a href={project.live} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-4 w-4" />
-                              Live
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
+                      <CardContent className="p-6 flex flex-col flex-1">
+                        <h4 className="text-xl font-bold mb-2">{project.title}</h4>
+                        <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {project.tags.map(tag => (
+                            <Badge key={tag} variant="outline">{tag}</Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-3 mt-auto">
+                          {project.github && (
+                            <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
+                              <a href={project.github} target="_blank" rel="noopener noreferrer">
+                                <Github className="h-4 w-4" />
+                                Code
+                              </a>
+                            </Button>
+                          )}
+                          {project.live && (
+                            <Button size="sm" className="flex-1 gap-2" asChild>
+                              <a href={project.live} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-4 w-4" />
+                                Live
+                              </a>
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            )}
           </div>
         </section>
         
         {/* All Projects */}
-        <section className="py-20 bg-secondary/50 dark:bg-secondary/10">
+        <section className="py-20 bg-secondary/20 backdrop-blur-sm dark:bg-secondary/10">
           <div className="container">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">All Work</h2>
@@ -276,45 +359,56 @@ const ProjectsPage = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects
-                .filter(project => !project.featured)
-                .map(project => (
-                  <Card key={project.id} className="overflow-hidden hover-lift card-hover h-full flex flex-col">
-                    <div className="h-40 bg-primary/5 flex items-center justify-center relative">
-                      {getCategoryIcon(project.category)}
-                      <Badge className="absolute top-4 right-4">{getCategoryName(project.category)}</Badge>
-                    </div>
-                    <CardContent className="p-6 flex flex-col flex-1">
-                      <h4 className="text-xl font-bold mb-2">{project.title}</h4>
-                      <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tags.map(tag => (
-                          <Badge key={tag} variant="outline">{tag}</Badge>
-                        ))}
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader className="w-10 h-10 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div ref={projectsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {visibleProjects
+                  .filter(project => !project.featured)
+                  .map((project, index) => (
+                    <Card 
+                      key={project.id} 
+                      className="project-card overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col bg-card/80 backdrop-blur-sm"
+                      style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                    >
+                      <div className="h-40 bg-primary/5 flex items-center justify-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background/20"></div>
+                        {getCategoryIcon(project.category)}
+                        <Badge className="absolute top-4 right-4 z-10">{getCategoryName(project.category)}</Badge>
                       </div>
-                      <div className="flex gap-3 mt-auto">
-                        {project.github && (
-                          <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                            <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="h-4 w-4" />
-                              Code
-                            </a>
-                          </Button>
-                        )}
-                        {project.live && (
-                          <Button size="sm" className="flex-1 gap-2" asChild>
-                            <a href={project.live} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-4 w-4" />
-                              Live
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
+                      <CardContent className="p-6 flex flex-col flex-1">
+                        <h4 className="text-xl font-bold mb-2">{project.title}</h4>
+                        <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {project.tags.map(tag => (
+                            <Badge key={tag} variant="outline">{tag}</Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-3 mt-auto">
+                          {project.github && (
+                            <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
+                              <a href={project.github} target="_blank" rel="noopener noreferrer">
+                                <Github className="h-4 w-4" />
+                                Code
+                              </a>
+                            </Button>
+                          )}
+                          {project.live && (
+                            <Button size="sm" className="flex-1 gap-2" asChild>
+                              <a href={project.live} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-4 w-4" />
+                                Live
+                              </a>
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            )}
           </div>
         </section>
         
@@ -327,11 +421,17 @@ const ProjectsPage = () => {
                 Let's collaborate on your next project and create something amazing together!
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button asChild size="lg" className="gap-2">
-                  <a href="/#contact">
-                    Contact Me
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
+                <Button 
+                  size="lg" 
+                  className="gap-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    sessionStorage.setItem("scrollToContact", "true");
+                    window.location.href = "/";
+                  }}
+                >
+                  Contact Me
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
                 <Button asChild variant="outline" size="lg" className="gap-2">
                   <a href="https://github.com" target="_blank" rel="noopener noreferrer">
