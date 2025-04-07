@@ -21,7 +21,10 @@ export function PageHero({
 }: PageHeroProps) {
   const typingRef = useRef<HTMLDivElement>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
+  const imageRefs = useRef<HTMLImageElement[]>([]);
   
+  // Intersection observer for typing animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -44,13 +47,26 @@ export function PageHero({
     };
   }, []);
 
+  // Preload background images and manage rotation
   useEffect(() => {
     if (!backgroundImages || backgroundImages.length <= 1) return;
     
+    // Preload images
+    backgroundImages.forEach((src, index) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        setImagesLoaded(prev => ({ ...prev, [index]: true }));
+      };
+      imageRefs.current[index] = img;
+    });
+    
+    // Start image rotation
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentImageIndex((prevIndex) => {
+        const nextIndex = prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1;
+        return nextIndex;
+      });
     }, 5000); // Change image every 5 seconds
     
     return () => clearInterval(interval);
@@ -66,7 +82,11 @@ export function PageHero({
               className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
                 index === currentImageIndex ? "opacity-20" : "opacity-0"
               }`}
-              style={{ backgroundImage: `url(${img})` }}
+              style={{ 
+                backgroundImage: imagesLoaded[index] ? `url(${img})` : 'none',
+                willChange: 'opacity, transform',
+              }}
+              aria-hidden="true"
             />
           ))}
           <div className="absolute bottom-8 right-8 z-10 flex space-x-2">
@@ -79,6 +99,7 @@ export function PageHero({
                 onClick={() => setCurrentImageIndex(index)}
                 whileHover={{ scale: 1.5 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label={`View background image ${index + 1}`}
               />
             ))}
           </div>
@@ -88,7 +109,11 @@ export function PageHero({
       return (
         <div 
           className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-20" 
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+          style={{ 
+            backgroundImage: `url(${backgroundImage})`,
+            willChange: 'opacity',
+          }}
+          aria-hidden="true"
         />
       );
     }

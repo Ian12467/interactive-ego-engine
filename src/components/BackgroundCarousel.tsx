@@ -1,9 +1,11 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getThemeColorFromImage, getSecondaryColorFromPrimary, getAccentColorFromPrimary } from '@/utils/colorUtils';
 
 export function BackgroundCarousel() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const imagesRef = useRef<HTMLImageElement[]>([]);
   
   // Array of background images
   const backgroundImages = [
@@ -15,12 +17,36 @@ export function BackgroundCarousel() {
     "/lovable-uploads/61678bbf-d151-485d-a58b-4c4220243028.png"
   ];
 
+  // Preload images
+  useEffect(() => {
+    // Create array of image elements to preload
+    backgroundImages.forEach((src, index) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        setLoadedImages(prev => ({ ...prev, [index]: true }));
+      };
+      imagesRef.current[index] = img;
+    });
+    
+    // Preload the next image in advance
+    const preloadNextImage = (currentIdx: number) => {
+      const nextIdx = (currentIdx + 1) % backgroundImages.length;
+      if (!loadedImages[nextIdx] && imagesRef.current[nextIdx]) {
+        imagesRef.current[nextIdx].src = backgroundImages[nextIdx];
+      }
+    };
+    
+    preloadNextImage(currentImageIndex);
+  }, [currentImageIndex, backgroundImages.length]);
+
   // Image rotation effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentImageIndex((prevIndex) => {
+        const newIndex = prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1;
+        return newIndex;
+      });
     }, 5000); // Change image every 5 seconds
     
     return () => clearInterval(interval);
@@ -41,9 +67,6 @@ export function BackgroundCarousel() {
     if (!document.documentElement.classList.contains('dark')) {
       document.documentElement.style.setProperty('--ring', primaryColor);
     }
-    
-    // Add a subtle transition effect to all color changes
-    document.documentElement.style.setProperty('transition', 'background-color 1s ease, color 1s ease, border-color 1s ease');
   }, [currentImageIndex, backgroundImages]);
 
   return (
@@ -54,7 +77,11 @@ export function BackgroundCarousel() {
           className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out ${
             index === currentImageIndex ? "opacity-30" : "opacity-0"
           }`}
-          style={{ backgroundImage: `url(${img})` }}
+          style={{ 
+            backgroundImage: loadedImages[index] ? `url(${img})` : 'none',
+            willChange: 'opacity',
+          }}
+          aria-hidden="true"
         />
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-background/80 z-10"></div>
