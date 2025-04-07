@@ -8,7 +8,7 @@ export function BackgroundCarousel() {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const [isInView, setIsInView] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Array of background images
   const backgroundImages = useMemo(() => [
