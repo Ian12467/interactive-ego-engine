@@ -4,6 +4,13 @@ import { Github, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type Project = {
   id: number;
@@ -19,6 +26,7 @@ type Project = {
 export function Projects() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [isVisible, setIsVisible] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({});
   const sectionRef = useRef<HTMLElement>(null);
   
   const projects: Project[] = [
@@ -97,6 +105,17 @@ export function Projects() {
     ? projects 
     : projects.filter(project => project.category.includes(activeFilter));
   
+  // Preload all project images for better UX
+  useEffect(() => {
+    projects.forEach(project => {
+      const img = new Image();
+      img.src = project.image;
+      img.onload = () => {
+        setImageLoaded(prev => ({ ...prev, [project.id]: true }));
+      };
+    });
+  }, []);
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -105,7 +124,7 @@ export function Projects() {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: "100px" }
     );
     
     if (sectionRef.current) {
@@ -118,6 +137,9 @@ export function Projects() {
       }
     };
   }, []);
+
+  // For mobile screens, use a carousel instead of a grid
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <section
@@ -145,50 +167,106 @@ export function Projects() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <Card 
-              key={project.id} 
-              className={`project-card border-0 overflow-hidden rounded-lg shadow-md ${isVisible ? "animate-fadeIn" : "opacity-0"}`}
-              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-            >
-              <div className="relative h-60 overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
-                  className="w-full h-full object-cover"
-                />
-                <div className="project-card-overlay">
-                  <div className="flex flex-col space-y-2">
-                    <h4 className="text-white text-xl font-bold">{project.title}</h4>
-                    <div className="flex gap-2 mt-2">
-                      <a href={project.github} aria-label="GitHub">
-                        <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30">
-                          <Github className="h-4 w-4" />
-                        </Button>
-                      </a>
-                      <a href={project.link} aria-label="Live Demo">
-                        <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30">
-                          <Link className="h-4 w-4" />
-                        </Button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <CardContent className="p-6">
-                <h4 className="text-xl font-bold mb-2">{project.title}</h4>
-                <p className="text-muted-foreground mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">{tag}</Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {isMobile ? (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {filteredProjects.map((project) => (
+                <CarouselItem key={project.id} className="basis-full sm:basis-1/2 md:basis-1/3">
+                  <ProjectCard 
+                    project={project} 
+                    isVisible={isVisible} 
+                    imageLoaded={imageLoaded[project.id]}
+                    index={filteredProjects.indexOf(project)}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center mt-6 gap-4">
+              <CarouselPrevious className="static transform-none" />
+              <CarouselNext className="static transform-none" />
+            </div>
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.map((project, index) => (
+              <ProjectCard 
+                key={project.id}
+                project={project} 
+                isVisible={isVisible} 
+                imageLoaded={imageLoaded[project.id]}
+                index={index}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
+  );
+}
+
+// Extract ProjectCard as a separate component for better organization
+function ProjectCard({ 
+  project, 
+  isVisible, 
+  imageLoaded = false,
+  index = 0 
+}: { 
+  project: Project; 
+  isVisible: boolean; 
+  imageLoaded?: boolean;
+  index: number;
+}) {
+  return (
+    <Card 
+      className={`project-card border-0 overflow-hidden rounded-lg shadow-md ${isVisible ? "animate-fadeIn" : "opacity-0"}`}
+      style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+    >
+      <div className="relative h-60 overflow-hidden">
+        {imageLoaded ? (
+          <img 
+            src={project.image} 
+            alt={project.title} 
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-primary/5">
+            <span className="sr-only">Loading image</span>
+          </div>
+        )}
+        <div className="project-card-overlay absolute inset-0 bg-gradient-to-b from-transparent to-black/80 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+          <div className="flex flex-col space-y-2">
+            <h4 className="text-white text-xl font-bold">{project.title}</h4>
+            <div className="flex gap-2 mt-2">
+              <a href={project.github} aria-label="GitHub">
+                <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30">
+                  <Github className="h-4 w-4" />
+                </Button>
+              </a>
+              <a href={project.link} aria-label="Live Demo">
+                <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30">
+                  <Link className="h-4 w-4" />
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <CardContent className="p-6">
+        <h4 className="text-xl font-bold mb-2">{project.title}</h4>
+        <p className="text-muted-foreground mb-4">{project.description}</p>
+        <div className="flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <Badge key={tag} variant="secondary">{tag}</Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

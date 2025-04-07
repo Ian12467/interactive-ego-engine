@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
 import { PageHero } from "@/components/PageHero";
@@ -7,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProjectsBackground } from "@/components/ProjectsBackground";
+import { ProjectsMatrixBackground } from "@/components/ProjectsMatrixBackground";
+import { ProjectCarousel } from "@/components/ProjectCarousel";
 import { 
   ArrowRight, 
   Code, 
@@ -204,7 +205,24 @@ const ProjectsPage = () => {
     return () => clearTimeout(timer);
   }, [filteredProjects]);
 
-  // Intersection observer to animate elements when they come into view
+  // Prepare carousel data
+  const featuredProjects = filteredProjects
+    .filter(project => project.featured)
+    .map(project => ({
+      ...project,
+      icon: getCategoryIcon(project.category),
+      category: getCategoryName(project.category)
+    }));
+
+  const regularProjects = filteredProjects
+    .filter(project => !project.featured)
+    .map(project => ({
+      ...project,
+      icon: getCategoryIcon(project.category),
+      category: getCategoryName(project.category)
+    }));
+
+  // Optimize the intersection observer to animate elements
   useEffect(() => {
     if (!projectsRef.current) return;
     
@@ -237,6 +255,7 @@ const ProjectsPage = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       <ProjectsBackground />
+      <ProjectsMatrixBackground />
       <main className="flex-1">
         <PageHero 
           title="My Projects"
@@ -245,7 +264,7 @@ const ProjectsPage = () => {
         />
         
         {/* Filter Section */}
-        <section className="py-10 border-b border-border backdrop-blur-sm bg-background/50">
+        <section className="py-10 border-b border-border backdrop-blur-sm bg-background/50 sticky top-16 z-10">
           <div className="container">
             <div className="flex flex-wrap justify-center gap-4">
               <Button 
@@ -282,73 +301,17 @@ const ProjectsPage = () => {
           </div>
         </section>
         
-        {/* Featured Projects */}
-        <section className="py-20">
-          <div className="container">
-            <div className="text-center mb-16">
-              <h2 className="text-primary text-lg font-medium mb-2">Showcase</h2>
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h3>
-              <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Highlighting my best work across different domains - from full-stack applications to security solutions and design projects.
-              </p>
-            </div>
-            
-            {isLoading ? (
-              <div className="flex justify-center py-20">
-                <Loader className="w-10 h-10 animate-spin text-primary" />
-              </div>
-            ) : (
-              <div ref={projectsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {visibleProjects
-                  .filter(project => project.featured)
-                  .map((project, index) => (
-                    <Card 
-                      key={project.id} 
-                      className="project-card overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col bg-card/80 backdrop-blur-sm"
-                      style={{ animationDelay: `${0.1 + index * 0.1}s` }}
-                    >
-                      <div className="h-48 bg-primary/5 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background/20"></div>
-                        {getCategoryIcon(project.category)}
-                        <Badge className="absolute top-4 right-4 z-10">{getCategoryName(project.category)}</Badge>
-                      </div>
-                      <CardContent className="p-6 flex flex-col flex-1">
-                        <h4 className="text-xl font-bold mb-2">{project.title}</h4>
-                        <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.tags.map(tag => (
-                            <Badge key={tag} variant="outline">{tag}</Badge>
-                          ))}
-                        </div>
-                        <div className="flex gap-3 mt-auto">
-                          {project.github && (
-                            <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                              <a href={project.github} target="_blank" rel="noopener noreferrer">
-                                <Github className="h-4 w-4" />
-                                Code
-                              </a>
-                            </Button>
-                          )}
-                          {project.live && (
-                            <Button size="sm" className="flex-1 gap-2" asChild>
-                              <a href={project.live} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="h-4 w-4" />
-                                Live
-                              </a>
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Featured Projects Carousel */}
+        {featuredProjects.length > 0 && (
+          <ProjectCarousel 
+            projects={featuredProjects} 
+            title="Showcase" 
+            subtitle="Featured Projects" 
+          />
+        )}
         
-        {/* All Projects */}
-        <section className="py-20 bg-secondary/20 backdrop-blur-sm dark:bg-secondary/10">
+        {/* All Projects Grid */}
+        <section className="py-16 bg-secondary/20 backdrop-blur-sm dark:bg-secondary/10">
           <div className="container">
             <div className="text-center mb-16">
               <h2 className="text-primary text-lg font-medium mb-2">All Work</h2>
