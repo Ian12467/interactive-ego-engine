@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { motion } from "framer-motion";
 
 interface PageHeroProps {
   title: string;
@@ -68,6 +69,19 @@ export function PageHero({
               style={{ backgroundImage: `url(${img})` }}
             />
           ))}
+          <div className="absolute bottom-8 right-8 z-10 flex space-x-2">
+            {backgroundImages.map((_, index) => (
+              <motion.button
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentImageIndex ? "bg-primary" : "bg-primary/30"
+                }`}
+                onClick={() => setCurrentImageIndex(index)}
+                whileHover={{ scale: 1.5 }}
+                whileTap={{ scale: 0.9 }}
+              />
+            ))}
+          </div>
         </div>
       );
     } else if (backgroundImage) {

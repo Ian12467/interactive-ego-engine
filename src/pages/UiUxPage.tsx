@@ -5,9 +5,40 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { UiUxImageCarousel } from "@/components/UiUxImageCarousel";
 import { ArrowRight, Figma, Framer, Palette, LayoutGrid, Users, Laptop, Code, EyeIcon, PenTool, Workflow } from "lucide-react";
 
 const UiUxPage = () => {
+  // Define the UI/UX background images
+  const backgroundImages = [
+    "/lovable-uploads/608b051f-4f5a-48bb-a9fc-bdc81e98e4ee.png", // Purple setup
+    "/lovable-uploads/5c92a430-5bfe-4dc6-86bb-92dec162c2d4.png", // Tablet
+    "/lovable-uploads/5584903f-40b9-4c50-802c-bfddda0c3cee.png", // Coffee workspace
+    "/lovable-uploads/32265a51-f883-4858-bf3c-d6038dd14113.png", // Dual monitor setup
+  ];
+
+  // Project carousel images
+  const projectImages = [
+    "/lovable-uploads/3bddd775-efa5-4d27-9755-40f7fd85513e.png", // Mobile design
+    "/lovable-uploads/a2c22064-63c0-4448-8e6f-7b4b81e2dda2.png", // Coding
+    "/lovable-uploads/8546cc4d-e4d1-48cd-ae2d-246269767ad7.png", // Wireframe
+    "/lovable-uploads/2373305b-3ca2-44bb-b08c-f39fe3198dd1.png", // Minimalist
+  ];
+
+  const projectTitles = [
+    "Mobile App Interface Design",
+    "Web Application Development",
+    "Wireframing & Prototyping",
+    "Minimalist Design Systems",
+  ];
+
+  const projectDescriptions = [
+    "Creating intuitive mobile interfaces that engage users and simplify complex tasks",
+    "Developing responsive web applications with clean code and optimal user experience",
+    "Turning concepts into interactive wireframes and prototypes for rapid testing",
+    "Designing clean, functional systems that prioritize content and usability",
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -16,7 +47,30 @@ const UiUxPage = () => {
           title="UI/UX Designer"
           subtitle="Designing Digital Experiences That Inspire & Perform"
           description="Crafting intuitive and visually appealing user experiences through research, design thinking, and creative solutions."
+          backgroundImages={backgroundImages}
         />
+        
+        {/* Featured Work Showcase */}
+        <section className="py-12 bg-background">
+          <div className="container">
+            <div className="text-center mb-10">
+              <h2 className="text-primary text-lg font-medium mb-2">Featured Work</h2>
+              <h3 className="text-3xl font-bold mb-4">Recent Design Projects</h3>
+              <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                A showcase of my latest UI/UX design projects across mobile, web, and product design
+              </p>
+            </div>
+            
+            <div className="max-w-5xl mx-auto">
+              <UiUxImageCarousel 
+                images={projectImages}
+                titles={projectTitles}
+                descriptions={projectDescriptions}
+              />
+            </div>
+          </div>
+        </section>
         
         {/* Skills Section */}
         <section id="skills" className="py-20 bg-gradient-to-b from-background to-secondary/30">
@@ -233,8 +287,12 @@ const UiUxPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Project 1 */}
               <div className="project-card rounded-lg overflow-hidden bg-card">
-                <div className="h-48 bg-primary/10 flex items-center justify-center">
-                  <Laptop className="h-16 w-16 text-primary/30" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/5584903f-40b9-4c50-802c-bfddda0c3cee.png"
+                    alt="Design workspace" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="project-card-overlay">
                   <Badge className="mb-2">UX Research</Badge>
@@ -258,8 +316,12 @@ const UiUxPage = () => {
               
               {/* Project 2 */}
               <div className="project-card rounded-lg overflow-hidden bg-card">
-                <div className="h-48 bg-primary/10 flex items-center justify-center">
-                  <Framer className="h-16 w-16 text-primary/30" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/3bddd775-efa5-4d27-9755-40f7fd85513e.png"
+                    alt="Mobile UI Design" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="project-card-overlay">
                   <Badge className="mb-2">Mobile App</Badge>
@@ -283,8 +345,12 @@ const UiUxPage = () => {
               
               {/* Project 3 */}
               <div className="project-card rounded-lg overflow-hidden bg-card">
-                <div className="h-48 bg-primary/10 flex items-center justify-center">
-                  <Workflow className="h-16 w-16 text-primary/30" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/8546cc4d-e4d1-48cd-ae2d-246269767ad7.png"
+                    alt="Wireframe" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="project-card-overlay">
                   <Badge className="mb-2">Web Application</Badge>
@@ -318,9 +384,11 @@ const UiUxPage = () => {
           </div>
         </section>
         
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-primary/10 to-purple-400/10">
-          <div className="container">
+        {/* CTA Section with background image */}
+        <section className="py-20 relative">
+          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{backgroundImage: `url('/lovable-uploads/608b051f-4f5a-48bb-a9fc-bdc81e98e4ee.png')`}}></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-purple-400/30"></div>
+          <div className="container relative z-10">
             <div className="text-center max-w-2xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Let's create something amazing together!</h2>
               <p className="text-lg text-muted-foreground mb-8">
