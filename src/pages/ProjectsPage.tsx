@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
 import { PageHero } from "@/components/PageHero";
@@ -36,14 +37,34 @@ interface Project {
 
 const ProjectsPage = () => {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('all');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState<Project[]>([]);
   const projectsRef = useRef<HTMLDivElement>(null);
   
-  // Sample project data
+  // Enhanced project data with your new projects
   const projects: Project[] = [
     {
       id: 1,
+      title: "LuxeGems Jewelry Store",
+      description: "Elegant jewelry e-commerce platform with sophisticated design, product galleries, and secure checkout. Features responsive design and smooth user experience.",
+      category: "fullstack",
+      image: "/lovable-uploads/35e23ad3-8e62-4423-a75e-8df1dd504c58.png",
+      tags: ["React", "E-commerce", "Responsive Design", "UI/UX"],
+      live: "https://luxegems.netlify.app/",
+      featured: true
+    },
+    {
+      id: 2,
+      title: "Hunter's Choice Outdoor Gear",
+      description: "Outdoor equipment and hunting gear website with product catalogs, filtering systems, and responsive design optimized for outdoor enthusiasts.",
+      category: "fullstack", 
+      image: "/lovable-uploads/61678bbf-d151-485d-a58b-4c4220243028.png",
+      tags: ["React", "Product Catalog", "Filtering", "Responsive"],
+      live: "https://hunterschoice.netlify.app/",
+      featured: true
+    },
+    {
+      id: 3,
       title: "E-Commerce Platform",
       description: "Full-stack e-commerce platform with React.js, Django & Stripe payments integration. Features include search & filtering with Elasticsearch, email notifications & order tracking.",
       category: "fullstack",
@@ -54,27 +75,27 @@ const ProjectsPage = () => {
       featured: true
     },
     {
-      id: 2,
+      id: 4,
       title: "Cloud Security Assessment Tool",
       description: "AWS security scanning tool that analyzes IAM policies, S3 bucket permissions, and security groups for vulnerabilities. Implements AWS best practices and NIST framework guidelines.",
       category: "security",
       image: "/placeholder.svg",
       tags: ["AWS", "Python", "IAM", "NIST"],
       github: "https://github.com",
-      featured: true
+      featured: false
     },
     {
-      id: 3,
+      id: 5,
       title: "Banking App UI Redesign",
       description: "A modern banking application interface designed for simplicity and security with interactive prototypes and user testing results showing 40% improvement in task completion rate.",
       category: "uiux",
       image: "/placeholder.svg",
       tags: ["Figma", "UI Design", "Prototyping", "User Testing"],
       live: "https://figma.com",
-      featured: true
+      featured: false
     },
     {
-      id: 4,
+      id: 6,
       title: "Financial Management Web App",
       description: "User budgeting tool with OAuth2 authentication for secure sign-in with Google. Features include expense tracking, financial goals, and multi-user role dashboard.",
       category: "fullstack",
@@ -84,7 +105,7 @@ const ProjectsPage = () => {
       featured: false
     },
     {
-      id: 5,
+      id: 7,
       title: "Network Intrusion Detection System",
       description: "Custom IDS solution that monitors network traffic for suspicious activities using machine learning algorithms to detect anomalies and potential threats.",
       category: "security",
@@ -94,7 +115,7 @@ const ProjectsPage = () => {
       featured: false
     },
     {
-      id: 6,
+      id: 8,
       title: "Task Management Dashboard",
       description: "A productivity dashboard designed for teams with focus on accessibility and ease of use. Features include Kanban boards, time tracking, and team collaboration tools.",
       category: "uiux",
@@ -104,33 +125,13 @@ const ProjectsPage = () => {
       featured: false
     },
     {
-      id: 7,
+      id: 9,
       title: "Secure File Sharing App",
       description: "File-sharing application with end-to-end encryption, implemented AWS S3 storage with role-based access control, and secure download links with expiration.",
       category: "fullstack",
       image: "/placeholder.svg",
       tags: ["AWS S3", "React", "Node.js", "Encryption"],
       github: "https://github.com",
-      featured: false
-    },
-    {
-      id: 8,
-      title: "Vulnerability Scanner",
-      description: "Automated web application vulnerability scanner that identifies common security issues like XSS, SQLi, and CSRF. Generates detailed reports with remediation recommendations.",
-      category: "security",
-      image: "/placeholder.svg",
-      tags: ["Python", "Web Security", "Pentesting", "Automation"],
-      github: "https://github.com",
-      featured: false
-    },
-    {
-      id: 9,
-      title: "E-learning Platform Interface",
-      description: "User interface design for an online learning platform with focus on engagement, accessibility, and seamless navigation between course materials.",
-      category: "uiux",
-      image: "/placeholder.svg",
-      tags: ["Adobe XD", "User Research", "Information Architecture", "UI Animation"],
-      live: "https://behance.net",
       featured: false
     }
   ];
@@ -168,74 +169,35 @@ const ProjectsPage = () => {
     }
   };
 
-  // Progressive loading of projects for better performance
+  // Simplified loading of projects for better performance
   useEffect(() => {
     setIsLoading(true);
     
-    // Use timeout to allow for filter transition
+    // Simple timeout to show loading state briefly
     const timer = setTimeout(() => {
-      // Start with an empty array
-      setVisibleProjects([]);
-      
-      // Load projects in batches with small delay between each
-      const loadProjects = async () => {
-        const batchSize = 3;
-        const batches = Math.ceil(filteredProjects.length / batchSize);
-        
-        for (let i = 0; i < batches; i++) {
-          const start = i * batchSize;
-          const end = Math.min(start + batchSize, filteredProjects.length);
-          const batch = filteredProjects.slice(start, end);
-          
-          // Update visible projects with the new batch
-          setVisibleProjects(prev => [...prev, ...batch]);
-          
-          // Add a small delay between batches for smoother loading
-          if (i < batches - 1) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-          }
-        }
-        
-        setIsLoading(false);
-      };
-      
-      loadProjects();
-    }, 300);
+      setVisibleProjects(filteredProjects);
+      setIsLoading(false);
+    }, 200);
     
     return () => clearTimeout(timer);
   }, [filteredProjects]);
 
-  // Prepare carousel data
-  const featuredProjects = filteredProjects
-    .filter(project => project.featured)
-    .map(project => ({
-      ...project,
-      icon: getCategoryIcon(project.category),
-      category: getCategoryName(project.category)
-    }));
-
-  const regularProjects = filteredProjects
-    .filter(project => !project.featured)
-    .map(project => ({
-      ...project,
-      icon: getCategoryIcon(project.category),
-      category: getCategoryName(project.category)
-    }));
-
   // Optimize the intersection observer to animate elements
   useEffect(() => {
-    if (!projectsRef.current) return;
+    if (!projectsRef.current || isLoading) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry, index) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fadeIn');
-            observer.unobserve(entry.target);
+            setTimeout(() => {
+              entry.target.classList.add('animate-fadeIn');
+              observer.unobserve(entry.target);
+            }, index * 100);
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
     
     const projectCards = projectsRef.current.querySelectorAll('.project-card');
@@ -249,7 +211,16 @@ const ProjectsPage = () => {
         observer.unobserve(card);
       });
     };
-  }, [visibleProjects]);
+  }, [visibleProjects, isLoading]);
+
+  // Prepare carousel data
+  const featuredProjects = filteredProjects
+    .filter(project => project.featured)
+    .map(project => ({
+      ...project,
+      icon: getCategoryIcon(project.category),
+      category: getCategoryName(project.category)
+    }));
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -328,48 +299,46 @@ const ProjectsPage = () => {
               </div>
             ) : (
               <div ref={projectsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {visibleProjects
-                  .filter(project => !project.featured)
-                  .map((project, index) => (
-                    <Card 
-                      key={project.id} 
-                      className="project-card overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col bg-card/80 backdrop-blur-sm"
-                      style={{ animationDelay: `${0.1 + index * 0.1}s` }}
-                    >
-                      <div className="h-40 bg-primary/5 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background/20"></div>
-                        {getCategoryIcon(project.category)}
-                        <Badge className="absolute top-4 right-4 z-10">{getCategoryName(project.category)}</Badge>
+                {visibleProjects.map((project, index) => (
+                  <Card 
+                    key={project.id} 
+                    className="project-card overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col bg-card/80 backdrop-blur-sm"
+                    style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                  >
+                    <div className="h-40 bg-primary/5 flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background/20"></div>
+                      {getCategoryIcon(project.category)}
+                      <Badge className="absolute top-4 right-4 z-10">{getCategoryName(project.category)}</Badge>
+                    </div>
+                    <CardContent className="p-6 flex flex-col flex-1">
+                      <h4 className="text-xl font-bold mb-2">{project.title}</h4>
+                      <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.map(tag => (
+                          <Badge key={tag} variant="outline">{tag}</Badge>
+                        ))}
                       </div>
-                      <CardContent className="p-6 flex flex-col flex-1">
-                        <h4 className="text-xl font-bold mb-2">{project.title}</h4>
-                        <p className="text-muted-foreground mb-4 flex-1">{project.description}</p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.tags.map(tag => (
-                            <Badge key={tag} variant="outline">{tag}</Badge>
-                          ))}
-                        </div>
-                        <div className="flex gap-3 mt-auto">
-                          {project.github && (
-                            <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
-                              <a href={project.github} target="_blank" rel="noopener noreferrer">
-                                <Github className="h-4 w-4" />
-                                Code
-                              </a>
-                            </Button>
-                          )}
-                          {project.live && (
-                            <Button size="sm" className="flex-1 gap-2" asChild>
-                              <a href={project.live} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="h-4 w-4" />
-                                Live
-                              </a>
-                            </Button>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      <div className="flex gap-3 mt-auto">
+                        {project.github && (
+                          <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
+                            <a href={project.github} target="_blank" rel="noopener noreferrer">
+                              <Github className="h-4 w-4" />
+                              Code
+                            </a>
+                          </Button>
+                        )}
+                        {project.live && (
+                          <Button size="sm" className="flex-1 gap-2" asChild>
+                            <a href={project.live} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-4 w-4" />
+                              Live
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             )}
           </div>
